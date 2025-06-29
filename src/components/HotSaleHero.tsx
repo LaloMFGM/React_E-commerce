@@ -1,7 +1,3 @@
-// src/components/HotSaleHero.tsx (o puedes copiarlo directamente en HomePage.tsx por ahora)
-
-import React from 'react';
-
 export const HotSaleHero = () => {
   const discountCode = "HOTSALE2025"; // Puedes cambiar el código o hacerlo dinámico
   const endDate = "31 de Julio"; // Puedes cambiar la fecha
