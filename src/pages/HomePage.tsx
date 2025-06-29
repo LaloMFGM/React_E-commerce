@@ -9,6 +9,8 @@ export const HomePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
+  // Estado para controlar la visibilidad del menú de hamburguesa
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -105,10 +107,36 @@ export const HomePage = () => {
               </div>
             </div>
 
-            {/* Right: Navigation + Search */}
-            <div className="flex items-center gap-6 flex-wrap md:flex-nowrap">
-              {/* Navigation aligned to the right */}
-              <nav className="hidden md:flex items-center gap-6 text-gray-900 font-medium">
+            {/* Hamburger menu button for small screens */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900"
+              >
+                <svg
+                  className="h-6 w-6 fill-current"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {isMenuOpen ? (
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M18.278 16.864a1 1 0 01-1.414 1.414L12 13.414l-4.864 4.864a1 1 0 01-1.414-1.414L10.586 12 5.722 7.136a1 1 0 011.414-1.414L12 10.586l4.864-4.864a1 1 0 011.414 1.414L13.414 12l4.864 4.864z"
+                    />
+                  ) : (
+                    <path
+                      fillRule="evenodd"
+                      d="M4 5h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+
+            {/* Navigation and Search for medium and larger screens */}
+            <div className="hidden md:flex items-center gap-6 flex-wrap md:flex-nowrap">
+              <nav className="flex items-center gap-6 text-gray-900 font-medium">
                 <a href="/home" className="hover:text-blue-600">
                   Home
                 </a>
@@ -120,8 +148,7 @@ export const HomePage = () => {
                 </a>
               </nav>
 
-              {/* Search input visible only on md+ */}
-              <div className="hidden md:flex max-w-md w-full">
+              <div className="max-w-md w-full">
                 <input
                   type="text"
                   placeholder="Search products..."
@@ -133,6 +160,32 @@ export const HomePage = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile menu - Conditionally rendered based on isMenuOpen state */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-4">
+            <nav className="flex flex-col gap-3 mb-4 text-gray-900 font-medium">
+              <a href="/home" className="hover:text-blue-600 block">
+                Home
+              </a>
+              <a
+                href="/suggestproduct"
+                className="hover:text-blue-600 block whitespace-nowrap"
+              >
+                Suggest Product
+              </a>
+            </nav>
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
+              />
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section - DaisyUI's Hero with custom smaller height */}
@@ -148,10 +201,8 @@ export const HomePage = () => {
           backgroundColor: "#9ea3ac",
         }}
       >
-        {/* Hero Overlay - provides a semi-transparent layer for text readability */}
         <div className="hero-overlay bg-opacity-60"></div>
 
-        {/* Hero Content - the actual text and buttons */}
         <div className="hero-content text-center text-neutral-content">
           <div className="max-w-md">
             <h1 className="mb-5 text-5xl font-bold">
@@ -207,7 +258,6 @@ export const HomePage = () => {
                 key={product.id}
                 className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative"
               >
-                {/* Wishlist Button - positioned top right */}
                 <button className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer z-10 p-1">
                   <svg
                     className="h-6 w-6"
@@ -224,9 +274,7 @@ export const HomePage = () => {
                   </svg>
                 </button>
 
-                {/* Trending Badge - positioned top left */}
-                {/* Replace 'product.isTrending' with your actual data property if available */}
-                {product.price > 500 && ( // Example condition for trending
+                {product.price > 500 && (
                   <div className="absolute top-4 left-4 badge badge-secondary z-10">
                     TRENDING
                   </div>
@@ -239,7 +287,7 @@ export const HomePage = () => {
                       "https://via.placeholder.com/300x200?text=No+Image"
                     }
                     alt={product.name}
-                    className="object-contain w-full h-full p-4" // Padding inside figure
+                    className="object-contain w-full h-full p-4"
                   />
                 </figure>
                 <div className="card-body">
@@ -256,16 +304,6 @@ export const HomePage = () => {
                     Keep it short and sweet for card views!
                   </p>
 
-                  <div className="flex items-baseline gap-2 mb-3">
-                    <div className="text-gray-900 font-bold text-2xl">
-                      ${product.price.toFixed(2)}
-                    </div>
-                    <div className="text-gray-400 line-through text-sm">
-                      ${(product.price * 1.1).toFixed(2)}
-                    </div>
-                  </div>
-
-                  {/* Optional: Color options can be added here, similar to your original */}
                   <div className="flex items-center gap-1.5 mb-4">
                     <div className="w-5 h-5 rounded-full bg-red-500 border border-gray-200 cursor-pointer" title="Red"></div>
                     <div className="w-5 h-5 rounded-full bg-blue-500 border border-gray-200 cursor-pointer" title="Blue"></div>
@@ -286,39 +324,38 @@ export const HomePage = () => {
 
       ## Ofertas Especiales y Beneficios
 
-      <div className="hero bg-base-200 min-h-[50vh] py-10">
-        <div className="hero-content text-center w-full max-w-7xl mx-auto"> {/* Added w-full max-w-7xl mx-auto for better centering and width control */}
-          <div className="flex justify-center gap-6 overflow-x-auto pb-4 px-2"> {/* Removed flex-wrap, added overflow-x-auto and padding */}
+      <div className="hero bg-white min-h-[50vh] py-10 px-4">
+        <div className="hero-content text-center w-full max-w-7xl mx-auto flex flex-col items-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-black">Ofertas Especiales y Beneficios</h2>
 
-            {/* Card 1: Descuentos Increíbles */}
-            <div className="card w-80 bg-base-100 shadow-xl flex-shrink-0"> {/* Added flex-shrink-0 */}
+          <div className="flex flex-col md:flex-row justify-center gap-6 overflow-x-auto pb-4 px-2 w-full">
+
+            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold">🎉 Descuentos Imperdibles 🎉</h2>
-                <p>Aprovecha nuestras ofertas exclusivas en una amplia selección de productos. ¡No te los puedes perder!</p>
+                <h2 className="card-title text-2xl font-bold mb-4 text-black">🎉 Descuentos Imperdibles 🎉</h2>
+                <p className="mb-6 text-black">Aprovecha nuestras ofertas exclusivas en una amplia selección de productos. ¡No te los puedes perder!</p>
                 <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-primary">Ver Ofertas</button>
+                  <button className="btn btn-primary w-full">Ver Ofertas</button>
                 </div>
               </div>
             </div>
 
-            {/* Card 2: Hot Sale */}
-            <div className="card w-80 bg-base-100 shadow-xl flex-shrink-0"> {/* Added flex-shrink-0 */}
+            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold">🔥 Hot Sale ShopZone 🔥</h2>
-                <p>Prepárate para el Hot Sale con los mejores precios del año. ¡Regístrate para notificaciones!</p>
+                <h2 className="card-title text-2xl font-bold mb-4 text-black">🔥 Hot Sale ShopZone 🔥</h2>
+                <p className="mb-6 text-black">Prepárate para el Hot Sale con los mejores precios del año. ¡Regístrate para notificaciones!</p>
                 <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-secondary">Más Información</button>
+                  <button className="btn btn-secondary w-full">Más Información</button>
                 </div>
               </div>
             </div>
 
-            {/* Card 3: Meses Sin Intereses */}
-            <div className="card w-80 bg-base-100 shadow-xl flex-shrink-0"> {/* Added flex-shrink-0 */}
+            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold">💳 Meses Sin Intereses 💳</h2>
-                <p>Compra ahora y paga después con nuestras opciones de meses sin intereses en tus bancos favoritos.</p>
+                <h2 className="card-title text-2xl font-bold mb-4 text-black">💳 Meses Sin Intereses 💳</h2>
+                <p className="mb-6 text-black">Compra ahora y paga después con nuestras opciones de meses sin intereses en tus bancos favoritos.</p>
                 <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-accent">Ver Bancos</button>
+                  <button className="btn btn-accent w-full">Ver Bancos</button>
                 </div>
               </div>
             </div>
