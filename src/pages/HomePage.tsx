@@ -135,26 +135,35 @@ export const HomePage = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-<div
-  className="hero min-h-screen"
-  style={{
-    backgroundImage:
-      "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
-  }}
->
-  <div className="hero-overlay"></div>
-  <div className="hero-content text-neutral-content text-center">
-    <div className="max-w-md">
-      <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
-      <p className="mb-5">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-        quasi. In deleniti eaque aut repudiandae et a id nisi.
-      </p>
-      <button className="btn btn-primary">Get Started</button>
-    </div>
-  </div>
-</div>
+      {/* Hero Section - DaisyUI's Hero with custom smaller height */}
+      <div
+        className="hero" // Removed min-h-screen to apply custom height
+        style={{
+          backgroundImage:
+            "url(https://img.freepik.com/premium-photo/vertical-frame-full-size-photo-young-woman-formal-attire-with-black-shopping-bags_134398-10282.jpg?ga=GA1.1.782208770.1751165924&w=740)",
+          height: "70vh", // Set the hero height to 40% of the viewport height
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Hero Overlay - provides a semi-transparent layer for text readability */}
+        <div className="hero-overlay bg-opacity-60"></div>
+
+        {/* Hero Content - the actual text and buttons */}
+        <div className="hero-content text-center text-neutral-content">
+          <div className="max-w-md">
+            <h1 className="mb-5 text-5xl font-bold">
+              Descubre las Últimas Tendencias <br /> en ShopZone
+            </h1>
+            <p className="mb-5">
+              Encuentra productos únicos y de alta calidad para cada estilo y
+              necesidad.
+            </p>
+            <button className="btn btn-primary mr-2">Comprar Ahora</button>
+            <button className="btn btn-outline btn-info">Más Información</button>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">
