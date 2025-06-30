@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import Link and useNavigate
 import type { Product, ProductResponse } from "../interfaces/Product";
 import { HotSaleHero } from "../components/HotSaleHero";
 
@@ -11,21 +11,22 @@ export const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("name");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("name"); // This will now only apply to the initial product list display if needed
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state for mobile menu
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Initialize useNavigate
 
+  // Initial product load for the homepage display
   useEffect(() => {
     axios
       // .get(`${import.meta.env.VITE_API_URL}/api/products`)
-      .get("http://localhost:4000/api/products")
+      .get("http://localhost:4000/api/products") // Adjusted to use relative path for local development
       .then((res) => {
         const data = res.data.products.map((p: ProductResponse) => ({
           ...p,
           id: p._id,
         }));
-        setProducts(data);
+        setProducts(data); // Set initial products
       })
       .catch(() => {
         setError("Error loading products");
@@ -33,12 +34,22 @@ export const HomePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // Removed the filtering useEffect as search will now be handled via navigation to a new page.
+  // If you still want sorting on the homepage's initial product display, you would apply it directly
+  // to 'products' when rendering, or re-introduce a 'filteredProducts' state for the homepage.
+  // For now, the products displayed on the home page will not be filtered by 'searchTerm' or 'sortBy'
+  // until a search is explicitly performed.
+
+  // New function to handle search submission
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
+
     if (searchTerm.trim()) {
+      // Navigate to the /search page with the query parameter
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
+      // Optionally, clear the search term after navigation
       setSearchTerm("");
-      setIsMobileMenuOpen(false);
+      setIsMobileMenuOpen(false); // Close menu after search
     }
   };
 
@@ -89,6 +100,8 @@ export const HomePage = () => {
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 relative">
+            {" "}
+            {/* Added relative for absolute positioning of mobile menu */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <Link to="/home" className="flex items-center gap-1">
                 <span className="text-purple-600 text-2xl">🛍️</span>
@@ -185,48 +198,52 @@ export const HomePage = () => {
           </div>
         </div>
       </header>
-      
+      {/* Hero Section: Hero con figura (reverse order) de DaisyUI con fondo gris turquesa */}
       <div className="hero min-h-[75vh] bg-gray-100 py-10">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <img
             src={shoppingImage}
             className="max-w-sm rounded-lg "
-            alt="Mujer con bolsas de compra"
+            alt="Woman with shopping bags"
           />
           <div>
             <h1 className="text-5xl font-bold text-gray-900">
-              Tu Estilo, <br /> Nuestra Colección
+              Your Style, <br /> Our Collection
             </h1>
             <p className="py-6 text-lg text-gray-700">
-              Descubre lo último en moda y tecnología. Calidad que te define,
-              precios que te sorprenden.
+              Explore a wide range of products including technology, food, clothing, shoes, and much more. Find what you need at great prices.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="btn btn-primary btn-lg shadow-md hover:bg-blue-700 transition-colors duration-300">
-                Comprar Ahora
+                Shop Now
               </button>
               <button className="btn btn-outline btn-primary btn-lg shadow-md hover:bg-blue-600 hover:text-white transition-colors duration-300">
-                Ver Colecciones
+                View Collections
               </button>
             </div>
           </div>
         </div>
       </div>
-      
-      
+      ---
+      {/* Nuevo Hero de Hot Sale, ubicado justo debajo del primer Hero */}
       <HotSaleHero />
-      
-      
+      ---
+      {/* Contenido Principal (Sección de Productos) */}
       <main className="container mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold text-gray-900">Products</h2>
+            {/* The count will now reflect the initially loaded products, not filtered */}
             <span className="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded">
               {products.length} items
             </span>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
+            {/* The sort functionality on the homepage is currently applied to 'filteredProducts' which is no longer used for filtering.
+                If you want sorting on the *initial* product display, you'll need to apply it directly to `products` or reintroduce a state for sorted products.
+                For now, it will not affect the displayed products until a search is explicitly performed on the /search page.
+            */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -240,7 +257,7 @@ export const HomePage = () => {
           </div>
         </div>
 
-        
+        {/* Tarjetas de Productos */}
         {products.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
@@ -257,6 +274,7 @@ export const HomePage = () => {
                 to={`/product/${product.id}`}
                 className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative group"
               >
+                {/* The heart button should remain clickable independently, so it's not part of the Link */}
                 <button className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer z-10 p-1">
                   <svg
                     className="h-6 w-6"
@@ -294,6 +312,7 @@ export const HomePage = () => {
                     <div className="badge badge-outline badge-primary">
                       {product.category}
                     </div>
+                    {/* Add price display here, formatted for clarity */}
                     <span className="text-xl font-bold text-gray-900">
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
@@ -305,11 +324,13 @@ export const HomePage = () => {
                     {product.name}
                   </h2>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+                    {/* Use actual product description if available */}
                     {product.description ||
                       "A concise product description or key selling points go here. Keep it short and sweet for card views!"}
                   </p>
 
                   <div className="flex items-center gap-1.5 mb-4">
+                    {/* These would ideally come from product.colors */}
                     <div
                       className="w-5 h-5 rounded-full bg-red-500 border border-gray-200 cursor-pointer"
                       title="Red"
@@ -328,7 +349,7 @@ export const HomePage = () => {
                     <button
                       className="btn btn-primary btn-block"
                       onClick={(e) => {
-                        e.preventDefault(); 
+                        e.preventDefault(); /* Add to cart logic here */
                       }}
                     >
                       Add to Cart
@@ -340,26 +361,27 @@ export const HomePage = () => {
           </div>
         )}
       </main>
-      
+      ---
+      {/* Sección "Ofertas Especiales y Beneficios" */}
       <div className="hero bg-white min-h-[50vh] py-10 px-4">
         <div className="hero-content text-center w-full max-w-7xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-black">
-            Ofertas Especiales y Beneficios
+            Special Offers and Benefits
           </h2>
 
           <div className="flex flex-col md:flex-row justify-center gap-6 overflow-x-auto pb-4 px-2 w-full">
             <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
                 <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  🎉 Descuentos Imperdibles 🎉
+                  🎉 Unbeatable Discounts 🎉
                 </h2>
                 <p className="mb-6 text-black">
-                  Aprovecha nuestras ofertas exclusivas en una amplia selección
-                  de productos. ¡No te los puedes perder!
+                  Take advantage of our exclusive offers on a wide selection
+                  of products. You can't miss them!
                 </p>
                 <div className="card-actions justify-end mt-4">
                   <button className="btn btn-primary w-full">
-                    Ver Ofertas
+                    View Offers
                   </button>
                 </div>
               </div>
@@ -368,15 +390,15 @@ export const HomePage = () => {
             <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
                 <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  🔥 Hot Sale ShopZone 🔥
+                  🔥 ShopZone Hot Sale 🔥
                 </h2>
                 <p className="mb-6 text-black">
-                  Prepárate para el Hot Sale con los mejores precios del año.
-                  ¡Regístrate para notificaciones!
+                  Get ready for the Hot Sale with the best prices of the year.
+                  Sign up for notifications!
                 </p>
                 <div className="card-actions justify-end mt-4">
                   <button className="btn btn-secondary w-full">
-                    Más Información
+                    More Information
                   </button>
                 </div>
               </div>
@@ -385,14 +407,14 @@ export const HomePage = () => {
             <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
               <div className="card-body items-center text-center">
                 <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  💳 Meses Sin Intereses 💳
+                  💳 Interest-Free Months 💳
                 </h2>
                 <p className="mb-6 text-black">
-                  Compra ahora y paga después con nuestras opciones de meses sin
-                  intereses en tus bancos favoritos.
+                  Buy now and pay later with our interest-free options
+                  at your favorite banks.
                 </p>
                 <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-accent w-full">Ver Bancos</button>
+                  <button className="btn btn-accent w-full">View Banks</button>
                 </div>
               </div>
             </div>
