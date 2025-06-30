@@ -269,9 +269,9 @@ export const ProductDetailPage = () => {
               {/* Product Card 1 */}
               <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-gray-200">
                 <img
-                  src="https://images.unsplash.com/photo-1593642632823-8f7600868f77?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="https://p1-ofp.static.pub/ShareResource/las/faqs/images/lenovo-laptops-thinkbook-series-c-thinkbook-15-gen-2-amd-front.png"
                   alt="Laptop"
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain"
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
@@ -289,9 +289,9 @@ export const ProductDetailPage = () => {
               {/* Product Card 2 */}
               <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-gray-200">
                 <img
-                  src="https://images.unsplash.com/photo-1546435327-04664879207e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="https://www.lg.com/cac/images/televisores/md07504085/gallery/D1.jpg"
                   alt="Smart TV"
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain"
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
@@ -309,9 +309,9 @@ export const ProductDetailPage = () => {
               {/* Product Card 3 */}
               <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-gray-200">
                 <img
-                  src="https://images.unsplash.com/photo-1518779578-8cefa170f80b?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="https://http2.mlstatic.com/D_NQ_NP_779913-MLA54008740629_022023-O.webp"
                   alt="Gaming Mouse"
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain"
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
@@ -329,9 +329,9 @@ export const ProductDetailPage = () => {
               {/* Product Card 4 */}
               <div className="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer border border-gray-200">
                 <img
-                  src="https://images.unsplash.com/photo-1571477799793-e4d0d866a1e3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  src="https://1horashop.mx/cdn/shop/files/1_0edd41de-ab21-4cf6-b2cc-6ecec68ec1eb.webp?v=1691258769"
                   alt="Headphones"
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-contain"
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
