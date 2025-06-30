@@ -19,9 +19,9 @@ export const ProductSearchPage = () => {
       setError(null);
       axios
         .post(
-          `http://localhost:4000/api/products/search?query=${encodeURIComponent(
-            searchQuery
-          )}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/products/search?query=${encodeURIComponent(searchQuery)}`
         )
         .then((res) => {
           const data = res.data.products.map((p: ProductResponse) => ({
@@ -100,7 +100,10 @@ export const ProductSearchPage = () => {
               </Link>
             </div>
             {/* Search Bar in the middle of the navbar */}
-            <form onSubmit={handleSearchSubmit} className="flex-grow max-w-md mx-4">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex-grow max-w-md mx-4"
+            >
               <div className="relative">
                 <input
                   type="text"
@@ -147,7 +150,8 @@ export const ProductSearchPage = () => {
       <div className="bg-gray-100 py-6 mb-6 shadow-sm">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900">
-            Search Results for "<span className="text-blue-600">{searchQuery}</span>"
+            Search Results for "
+            <span className="text-blue-600">{searchQuery}</span>"
           </h1>
         </div>
       </div>
@@ -173,7 +177,9 @@ export const ProductSearchPage = () => {
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Start searching for products!
             </h3>
-            <p className="text-gray-600">Enter a term in the search bar above.</p>
+            <p className="text-gray-600">
+              Enter a term in the search bar above.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

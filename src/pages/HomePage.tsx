@@ -20,7 +20,7 @@ export const HomePage = () => {
   // Initial product load for the homepage display
   useEffect(() => {
     axios
-      .get("http://localhost:4000/api/products")
+      .get(`${import.meta.env.VITE_API_URL}/api/products`)
       .then((res) => {
         const data = res.data.products.map((p: ProductResponse) => ({
           ...p,

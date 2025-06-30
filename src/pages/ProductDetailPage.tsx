@@ -34,7 +34,8 @@ export const ProductDetailPage = () => {
 
         // Ajusta la URL según tu API real
         const response = await axios.get<{ product: Product }>(
-          `http://localhost:4000/api/products/${id}`
+          
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`
         );
 
         if (!response.data.product) {

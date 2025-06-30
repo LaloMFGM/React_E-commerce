@@ -7,7 +7,7 @@ const initialForm: Product = {
   description: "",
   price: 0,
   category: "",
-  imageUrl: ""
+  imageUrl: "",
 };
 
 export const SuggestProductPage = () => {
@@ -19,7 +19,8 @@ export const SuggestProductPage = () => {
   const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
-  const placeholderImage = "https://www.shutterstock.com/image-vector/drag-drop-add-document-file-600nw-2152749621.jpg";
+  const placeholderImage =
+    "https://www.shutterstock.com/image-vector/drag-drop-add-document-file-600nw-2152749621.jpg";
   const debounceTimeout = 300; // Puedes ajustar este valor (milisegundos)
 
   // useEffect para implementar el debounce
@@ -35,12 +36,16 @@ export const SuggestProductPage = () => {
     return () => clearTimeout(timer);
   }, [formData.imageUrl]); // Este efecto se ejecuta cada vez que formData.imageUrl cambia
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       // Aquí actualizamos formData inmediatamente para que el input del formulario muestre el valor actual
-      [name]: name === "price" ? Number(value) : value
+      [name]: name === "price" ? Number(value) : value,
     }));
     // El 'debouncedImageUrl' se actualizará a través del 'useEffect'
   };
@@ -53,7 +58,13 @@ export const SuggestProductPage = () => {
     e.preventDefault();
 
     // Simple validation
-    if (!formData.name || !formData.description || !formData.category || !formData.imageUrl || formData.price <= 0) {
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.category ||
+      !formData.imageUrl ||
+      formData.price <= 0
+    ) {
       setError("Please fill in all fields correctly.");
       return;
     }
@@ -62,13 +73,16 @@ export const SuggestProductPage = () => {
 
     try {
       // Send to the backend
-      const response = await fetch("http://localhost:4000/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/products`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -83,7 +97,8 @@ export const SuggestProductPage = () => {
       setImageError(false);
       setTimeout(() => navigate("/home"), 2000);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) { // Type 'any' for 'err' to handle potential non-Error objects
+    } catch (err: any) {
+      // Type 'any' for 'err' to handle potential non-Error objects
       setError(`Failed to submit suggestion: ${err.message || err}`);
     }
   };
@@ -98,7 +113,9 @@ export const SuggestProductPage = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <span className="text-purple-600 text-2xl">🛍️</span>
-                  <div className="text-xl font-bold text-gray-800">ShopZone</div>
+                  <div className="text-xl font-bold text-gray-800">
+                    ShopZone
+                  </div>
                 </div>
               </div>
 
@@ -165,7 +182,9 @@ export const SuggestProductPage = () => {
 
         <div className="flex-grow flex items-center justify-center text-center p-6 bg-gray-50">
           <div>
-            <h2 className="text-2xl font-bold text-green-600 mb-2">Thank you!</h2>
+            <h2 className="text-2xl font-bold text-green-600 mb-2">
+              Thank you!
+            </h2>
             <p>Your product suggestion has been submitted successfully.</p>
             <p className="text-sm text-gray-500">Redirecting to home...</p>
           </div>
@@ -290,14 +309,17 @@ export const SuggestProductPage = () => {
         </div>
       </header>
       {/* End Header */}
-
       {/* Main content - Product Suggestion Form and Image Preview */}
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col md:flex-row gap-8">
           {/* Columna de la imagen */}
           <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-100 rounded-lg p-4">
             <img
-              src={imageError || !debouncedImageUrl ? placeholderImage : debouncedImageUrl}
+              src={
+                imageError || !debouncedImageUrl
+                  ? placeholderImage
+                  : debouncedImageUrl
+              }
               alt="Product Preview"
               className="max-w-full h-auto object-contain rounded-lg shadow-md"
               onError={handleImageError} // Manejar error de carga de imagen
@@ -307,16 +329,26 @@ export const SuggestProductPage = () => {
 
           {/* Columna del formulario */}
           <div className="w-full md:w-1/2">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900 text-center">Suggest a New Product</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-900 text-center">
+              Suggest a New Product
+            </h1>
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <div
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                role="alert"
+              >
                 <strong className="font-bold">Error:</strong>
                 <span className="block sm:inline ml-2">{error}</span>
               </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="name" className="block mb-2 text-lg font-medium text-gray-700">Product Name</label>
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  Product Name
+                </label>
                 <input
                   type="text"
                   id="name"
@@ -330,7 +362,12 @@ export const SuggestProductPage = () => {
               </div>
 
               <div>
-                <label htmlFor="description" className="block mb-2 text-lg font-medium text-gray-700">Description</label>
+                <label
+                  htmlFor="description"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  Description
+                </label>
                 <textarea
                   id="description"
                   name="description"
@@ -343,7 +380,12 @@ export const SuggestProductPage = () => {
               </div>
 
               <div>
-                <label htmlFor="price" className="block mb-2 text-lg font-medium text-gray-700">Price</label>
+                <label
+                  htmlFor="price"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  Price
+                </label>
                 <input
                   type="number"
                   id="price"
@@ -359,7 +401,12 @@ export const SuggestProductPage = () => {
               </div>
 
               <div>
-                <label htmlFor="category" className="block mb-2 text-lg font-medium text-gray-700">Category</label>
+                <label
+                  htmlFor="category"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  Category
+                </label>
                 <select
                   id="category"
                   name="category"
@@ -382,7 +429,12 @@ export const SuggestProductPage = () => {
               </div>
 
               <div>
-                <label htmlFor="imageUrl" className="block mb-2 text-lg font-medium text-gray-700">Image URL</label>
+                <label
+                  htmlFor="imageUrl"
+                  className="block mb-2 text-lg font-medium text-gray-700"
+                >
+                  Image URL
+                </label>
                 <input
                   type="url"
                   id="imageUrl"
@@ -406,9 +458,7 @@ export const SuggestProductPage = () => {
         </div>
       </main>
       {/* End Main Content */}
-
       ---
-
       {/* Footer (retained) */}
       <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-8">
         <aside>
