@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../interfaces/Product";
 
-// Definimos el placeholder para imágenes que no carguen
+// Define the placeholder for images that don't load
 const PLACEHOLDER_IMAGE =
   "https://via.placeholder.com/600x400?text=Image+Not+Available";
 
@@ -11,14 +11,14 @@ export const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Para el Navbar
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // For the Navbar
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [imageError, setImageError] = useState(false); // Estado para manejar errores de imagen
+  const [imageError, setImageError] = useState(false); // State to handle image errors
 
   useEffect(() => {
-    // Resetear el estado de error de imagen cada vez que cambia el ID
+    // Reset image error state whenever the ID changes
     setImageError(false);
 
     if (!id) {
@@ -32,10 +32,10 @@ export const ProductDetailPage = () => {
         setLoading(true);
         setError(null);
 
-        // Ajusta la URL según tu API real
+        // Adjust the URL according to your actual API
         const response = await axios.get<{ product: Product }>(
-          
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          // `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          `http://localhost:4000/api/products/${id}` // Uncomment for local testing
         );
 
         if (!response.data.product) {
@@ -71,13 +71,11 @@ export const ProductDetailPage = () => {
     setImageError(true);
   };
 
-  // --- Renderizado Condicional para Loading/Error (pre-Navbar para centrar) ---
+  // --- Conditional Rendering for Loading/Error (pre-Navbar for centering) ---
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600 text-lg">
-          Cargando detalles del producto...
-        </p>
+        <p className="text-gray-600 text-lg">Loading product details...</p>
       </div>
     );
   }
@@ -90,10 +88,10 @@ export const ProductDetailPage = () => {
           onClick={() => navigate(-1)}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4"
         >
-          ← Volver
+          ← Go Back
         </button>
         <Link to="/home" className="text-blue-600 underline text-lg">
-          Ir al Inicio
+          Go to Home
         </Link>
       </div>
     );
@@ -103,16 +101,16 @@ export const ProductDetailPage = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
         <p className="text-gray-700 text-lg mb-4">
-          No se pudo cargar la información del producto.
+          Could not load product information.
         </p>
         <button
           onClick={() => navigate(-1)}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4"
         >
-          ← Volver
+          ← Go Back
         </button>
         <Link to="/home" className="text-blue-600 underline text-lg">
-          Ir al Inicio
+          Go to Home
         </Link>
       </div>
     );
@@ -199,7 +197,7 @@ export const ProductDetailPage = () => {
       {/* Main Content - Product Display Section */}
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto p-8 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col md:flex-row items-start gap-10 mb-12">
-          {/* Columna de la imagen (Izquierda) */}
+          {/* Image Column (Left) */}
           <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-100 rounded-lg p-6 overflow-hidden">
             <img
               src={imageError ? PLACEHOLDER_IMAGE : product.imageUrl}
@@ -210,13 +208,13 @@ export const ProductDetailPage = () => {
             />
           </div>
 
-          {/* Columna de la información del producto (Derecha) */}
+          {/* Product Information Column (Right) */}
           <div className="w-full md:w-1/2 flex flex-col justify-start">
             <button
               onClick={() => navigate(-1)}
               className="text-blue-600 hover:underline mb-6 self-start text-lg"
             >
-              ← Volver a la Lista
+              ← Back to List
             </button>
             <h1 className="text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
               {product.name}
@@ -230,33 +228,33 @@ export const ProductDetailPage = () => {
 
             <div className="mb-8">
               <span className="inline-block bg-blue-100 text-blue-800 text-md font-medium px-4 py-2 rounded-full shadow-sm">
-                Categoría: {product.category}
+                Category: {product.category}
               </span>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 mt-auto">
               <button className="w-full sm:w-auto flex-1 py-3 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-md">
-                Añadir al Carrito
+                Add to Cart
               </button>
               <button className="w-full sm:w-auto flex-1 py-3 px-6 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md">
-                Comprar Ahora
+                Buy Now
               </button>
             </div>
           </div>
         </div>
 
-        {/* --- Secciones Adicionales de la HomePage --- */}
+        {/* --- Additional Homepage Sections --- */}
 
         {/* Hot Sale Section */}
         <section className="bg-red-600 text-white py-16 px-8 rounded-lg text-center shadow-lg mb-12">
           <h2 className="text-5xl font-extrabold mb-4 animate-pulse">
-            ¡HOT SALE! 🔥
+            HOT SALE! 🔥
           </h2>
           <p className="text-2xl mb-6">
-            Grandes descuentos en miles de productos.
+            Great discounts on thousands of products.
           </p>
           <button className="bg-white text-red-600 font-bold py-3 px-8 rounded-full text-xl hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 shadow-md">
-            Ver Ofertas
+            View Offers
           </button>
         </section>
 
@@ -264,7 +262,7 @@ export const ProductDetailPage = () => {
         <section className="py-12 bg-white rounded-lg shadow-xl mb-12">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
-              Productos Populares
+              Trending Products
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {/* Product Card 1 */}
@@ -276,14 +274,14 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    Laptop Ultrabook
+                    Ultrabook Laptop
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    Potencia y portabilidad
+                    Power and portability
                   </p>
                   <p className="text-purple-600 font-bold text-xl">$1200.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    Añadir al Carrito
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -296,14 +294,14 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    Smart TV 4K 55"
+                    55" 4K Smart TV
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    Entretenimiento en alta definición
+                    High-definition entertainment
                   </p>
                   <p className="text-purple-600 font-bold text-xl">$750.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    Añadir al Carrito
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -316,14 +314,14 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    Mouse Gamer RGB
+                    RGB Gaming Mouse
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    Precisión para tus juegos
+                    Precision for your games
                   </p>
                   <p className="text-purple-600 font-bold text-xl">$55.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    Añadir al Carrito
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -336,14 +334,14 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                    Audífonos Bluetooth
+                    Bluetooth Headphones
                   </h3>
                   <p className="text-gray-600 text-sm mb-2">
-                    Sonido inmersivo sin cables
+                    Immersive wireless sound
                   </p>
                   <p className="text-purple-600 font-bold text-xl">$99.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                    Añadir al Carrito
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -355,7 +353,7 @@ export const ProductDetailPage = () => {
         <section className="py-12 bg-gray-100 rounded-lg shadow-xl">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
-              Nuestras Categorías
+              Our Categories
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Category Card 1 */}
@@ -367,10 +365,10 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4 text-center">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    Electrónica
+                    Electronics
                   </h3>
                   <p className="text-gray-600">
-                    Smartphones, laptops, gadgets y más.
+                    Smartphones, laptops, gadgets, and more.
                   </p>
                 </div>
               </div>
@@ -383,10 +381,10 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4 text-center">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    Hogar y Cocina
+                    Home & Kitchen
                   </h3>
                   <p className="text-gray-600">
-                    Electrodomésticos, utensilios y decoración.
+                    Appliances, utensils, and decor.
                   </p>
                 </div>
               </div>
@@ -399,10 +397,10 @@ export const ProductDetailPage = () => {
                 />
                 <div className="p-4 text-center">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    Deportes y Aire Libre
+                    Sports & Outdoors
                   </h3>
                   <p className="text-gray-600">
-                    Equipo, ropa y accesorios para tus aventuras.
+                    Gear, apparel, and accessories for your adventures.
                   </p>
                 </div>
               </div>
@@ -414,16 +412,16 @@ export const ProductDetailPage = () => {
         <section className="py-16 bg-purple-700 text-white text-center rounded-lg shadow-xl mt-12">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-extrabold mb-4">
-              ¿No encuentras lo que buscas?
+              Can't find what you're looking for?
             </h2>
             <p className="text-xl mb-8">
-              Sugiere un producto y lo buscaremos para ti.
+              Suggest a product and we'll search for it for you.
             </p>
             <Link
               to="/suggestproduct"
               className="inline-block bg-white text-purple-700 font-bold py-3 px-8 rounded-full text-xl hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 shadow-md"
             >
-              Sugerir Producto
+              Suggest Product
             </Link>
           </div>
         </section>

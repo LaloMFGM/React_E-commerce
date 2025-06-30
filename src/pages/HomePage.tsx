@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom"; // Import Link and useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import type { Product, ProductResponse } from "../interfaces/Product";
 import { HotSaleHero } from "../components/HotSaleHero";
 
@@ -11,22 +11,20 @@ export const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("name"); // This will now only apply to the initial product list display if needed
+  const [sortBy, setSortBy] = useState("name");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state for mobile menu
 
-  
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  // Initial product load for the homepage display
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/products`)
+      .get(`http://localhost:4000/api/products`)
       .then((res) => {
         const data = res.data.products.map((p: ProductResponse) => ({
           ...p,
           id: p._id,
         }));
-        setProducts(data); // Set initial products
+        setProducts(data);
       })
       .catch(() => {
         setError("Error loading products");
@@ -34,21 +32,12 @@ export const HomePage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // Removed the filtering useEffect as search will now be handled via navigation to a new page.
-  // If you still want sorting on the homepage's initial product display, you would apply it directly
-  // to 'products' when rendering, or re-introduce a 'filteredProducts' state for the homepage.
-  // For now, the products displayed on the home page will not be filtered by 'searchTerm' or 'sortBy'
-  // until a search is explicitly performed.
-
-  // New function to handle search submission
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent default form submission behavior
-
+    e.preventDefault();
     if (searchTerm.trim()) {
-      // Navigate to the /search page with the query parameter
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
-      // Optionally, clear the search term after navigation
       setSearchTerm("");
+      setIsMobileMenuOpen(false); // Close menu after search
     }
   };
 
@@ -98,54 +87,102 @@ export const HomePage = () => {
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 relative">
+            {" "}
+            {/* Added relative for absolute positioning of mobile menu */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <Link to="/home" className="flex items-center gap-1">
                 <span className="text-purple-600 text-2xl">🛍️</span>
                 <div className="text-xl font-bold text-gray-800">ShopZone</div>
               </Link>
             </div>
-            {/* Search Bar in the middle of the navbar */}
-            <form onSubmit={handleSearch} className="flex-grow max-w-md mx-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for products..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            {/* Hamburger Icon for Mobile */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  {isMobileMenuOpen ? (
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d="M6 18L18 6M6 6l12 12"
                     />
-                  </svg>
-                </button>
-              </div>
-            </form>
-            <nav className="flex items-center gap-6 text-gray-900 font-medium">
-              <Link to="/home" className="hover:text-blue-600">
-                Home
-              </Link>
-              <Link
-                to="/suggestproduct"
-                className="hover:text-blue-600 whitespace-nowrap"
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+            {/* Desktop Search Bar and Navigation Links */}
+            <div
+              className={`md:flex md:items-center md:flex-grow md:max-w-md md:mx-4 ${
+                isMobileMenuOpen
+                  ? "absolute top-16 left-0 w-full bg-white shadow-lg flex flex-col items-center py-4 space-y-4"
+                  : "hidden"
+              }`}
+            >
+              <form
+                onSubmit={handleSearch}
+                className="flex-grow w-full md:max-w-md md:mx-4"
               >
-                Suggest Product
-              </Link>
-            </nav>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for products..."
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+              <nav className="flex flex-col md:flex-row items-center gap-6 text-gray-900 font-medium mt-4 md:mt-0">
+                <Link
+                  to="/home"
+                  className="hover:text-blue-600"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/suggestproduct"
+                  className="hover:text-blue-600 whitespace-nowrap"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Suggest Product
+                </Link>
+              </nav>
+            </div>
           </div>
         </div>
       </header>
@@ -185,17 +222,12 @@ export const HomePage = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold text-gray-900">Products</h2>
-            {/* The count will now reflect the initially loaded products, not filtered */}
             <span className="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded">
               {products.length} items
             </span>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            {/* The sort functionality on the homepage is currently applied to 'filteredProducts' which is no longer used for filtering.
-                If you want sorting on the *initial* product display, you'll need to apply it directly to `products` or reintroduce a state for sorted products.
-                For now, it will not affect the displayed products until a search is explicitly performed on the /search page.
-            */}
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -226,7 +258,6 @@ export const HomePage = () => {
                 to={`/product/${product.id}`}
                 className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative group"
               >
-                {/* The heart button should remain clickable independently, so it's not part of the Link */}
                 <button className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer z-10 p-1">
                   <svg
                     className="h-6 w-6"
@@ -264,7 +295,6 @@ export const HomePage = () => {
                     <div className="badge badge-outline badge-primary">
                       {product.category}
                     </div>
-                    {/* Add price display here, formatted for clarity */}
                     <span className="text-xl font-bold text-gray-900">
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
@@ -276,13 +306,11 @@ export const HomePage = () => {
                     {product.name}
                   </h2>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                    {/* Use actual product description if available */}
                     {product.description ||
                       "A concise product description or key selling points go here. Keep it short and sweet for card views!"}
                   </p>
 
                   <div className="flex items-center gap-1.5 mb-4">
-                    {/* These would ideally come from product.colors */}
                     <div
                       className="w-5 h-5 rounded-full bg-red-500 border border-gray-200 cursor-pointer"
                       title="Red"

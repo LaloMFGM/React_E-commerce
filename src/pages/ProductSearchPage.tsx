@@ -11,6 +11,7 @@ export const ProductSearchPage = () => {
   const searchQuery = searchParams.get("query") || "";
   const [localSearchTerm, setLocalSearchTerm] = useState(searchQuery);
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state for mobile menu
 
   useEffect(() => {
     setLocalSearchTerm(searchQuery);
@@ -19,9 +20,7 @@ export const ProductSearchPage = () => {
       setError(null);
       axios
         .post(
-          `${
-            import.meta.env.VITE_API_URL
-          }/api/products/search?query=${encodeURIComponent(searchQuery)}`
+          `http://localhost:4000/api/products/search?query=${encodeURIComponent(searchQuery)}`
         )
         .then((res) => {
           const data = res.data.products.map((p: ProductResponse) => ({
@@ -44,6 +43,7 @@ export const ProductSearchPage = () => {
     e.preventDefault();
     if (localSearchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(localSearchTerm.trim())}`);
+      setIsMobileMenuOpen(false); // Close menu after search
     }
   };
 
@@ -92,57 +92,102 @@ export const ProductSearchPage = () => {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-16 relative">
+            {" "}
+            {/* Added relative for absolute positioning of mobile menu */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <Link to="/home" className="flex items-center gap-1">
                 <span className="text-purple-600 text-2xl">🛍️</span>
                 <div className="text-xl font-bold text-gray-800">ShopZone</div>
               </Link>
             </div>
-            {/* Search Bar in the middle of the navbar */}
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex-grow max-w-md mx-4"
-            >
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search for products..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900" // Added text-gray-900 here
-                  value={localSearchTerm}
-                  onChange={(e) => setLocalSearchTerm(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            {/* Hamburger Icon for Mobile */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  {isMobileMenuOpen ? (
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d="M6 18L18 6M6 6l12 12"
                     />
-                  </svg>
-                </button>
-              </div>
-            </form>
-            <nav className="flex items-center gap-6 text-gray-900 font-medium">
-              <Link to="/home" className="hover:text-blue-600">
-                Home
-              </Link>
-              <Link
-                to="/suggestproduct"
-                className="hover:text-blue-600 whitespace-nowrap"
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
+            {/* Desktop Search Bar and Navigation Links */}
+            <div
+              className={`md:flex md:items-center md:flex-grow md:max-w-md md:mx-4 ${
+                isMobileMenuOpen
+                  ? "absolute top-16 left-0 w-full bg-white shadow-lg flex flex-col items-center py-4 space-y-4"
+                  : "hidden"
+              }`}
+            >
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex-grow w-full md:max-w-md md:mx-4"
               >
-                Suggest Product
-              </Link>
-            </nav>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for products..."
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                    value={localSearchTerm}
+                    onChange={(e) => setLocalSearchTerm(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+              <nav className="flex flex-col md:flex-row items-center gap-6 text-gray-900 font-medium mt-4 md:mt-0">
+                <Link
+                  to="/home"
+                  className="hover:text-blue-600"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/suggestproduct"
+                  className="hover:text-blue-600 whitespace-nowrap"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Suggest Product
+                </Link>
+              </nav>
+            </div>
           </div>
         </div>
       </header>
@@ -150,8 +195,7 @@ export const ProductSearchPage = () => {
       <div className="bg-gray-100 py-6 mb-6 shadow-sm">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900">
-            Search Results for "
-            <span className="text-blue-600">{searchQuery}</span>"
+            Search Results for "<span className="text-blue-600">{searchQuery}</span>"
           </h1>
         </div>
       </div>
