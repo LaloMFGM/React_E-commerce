@@ -3,22 +3,20 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../interfaces/Product";
 
-// Define the placeholder for images that don't load
-const PLACEHOLDER_IMAGE =
-  "https://via.placeholder.com/600x400?text=Image+Not+Available";
 
 export const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const PLACEHOLDER_IMAGE =
+  "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // For the Navbar
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [imageError, setImageError] = useState(false); // State to handle image errors
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    // Reset image error state whenever the ID changes
     setImageError(false);
 
     if (!id) {
@@ -32,7 +30,6 @@ export const ProductDetailPage = () => {
         setLoading(true);
         setError(null);
 
-        // Adjust the URL according to your actual API
         const response = await axios.get<{ product: Product }>(
           // `${import.meta.env.VITE_API_URL}/api/products/${id}`
           `http://localhost:4000/api/products/${id}` // Uncomment for local testing

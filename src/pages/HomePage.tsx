@@ -12,13 +12,14 @@ export const HomePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("name");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // New state for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/products`)
+      // .get(`${import.meta.env.VITE_API_URL}/api/products`)
+      .get("http://localhost:4000/api/products")
       .then((res) => {
         const data = res.data.products.map((p: ProductResponse) => ({
           ...p,
@@ -37,7 +38,7 @@ export const HomePage = () => {
     if (searchTerm.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
-      setIsMobileMenuOpen(false); // Close menu after search
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -88,8 +89,6 @@ export const HomePage = () => {
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 relative">
-            {" "}
-            {/* Added relative for absolute positioning of mobile menu */}
             <div className="flex items-center gap-1 flex-shrink-0">
               <Link to="/home" className="flex items-center gap-1">
                 <span className="text-purple-600 text-2xl">🛍️</span>
@@ -186,7 +185,7 @@ export const HomePage = () => {
           </div>
         </div>
       </header>
-      {/* Hero Section: Hero con figura (reverse order) de DaisyUI con fondo gris turquesa */}
+      
       <div className="hero min-h-[75vh] bg-gray-100 py-10">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <img
@@ -213,11 +212,11 @@ export const HomePage = () => {
           </div>
         </div>
       </div>
-      ---
-      {/* Nuevo Hero de Hot Sale, ubicado justo debajo del primer Hero */}
+      
+      
       <HotSaleHero />
-      ---
-      {/* Contenido Principal (Sección de Productos) */}
+      
+      
       <main className="container mx-auto px-4 py-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
@@ -241,7 +240,7 @@ export const HomePage = () => {
           </div>
         </div>
 
-        {/* Tarjetas de Productos */}
+        
         {products.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
@@ -329,7 +328,7 @@ export const HomePage = () => {
                     <button
                       className="btn btn-primary btn-block"
                       onClick={(e) => {
-                        e.preventDefault(); /* Add to cart logic here */
+                        e.preventDefault(); 
                       }}
                     >
                       Add to Cart
@@ -341,8 +340,7 @@ export const HomePage = () => {
           </div>
         )}
       </main>
-      ---
-      {/* Sección "Ofertas Especiales y Beneficios" */}
+      
       <div className="hero bg-white min-h-[50vh] py-10 px-4">
         <div className="hero-content text-center w-full max-w-7xl mx-auto flex flex-col items-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-black">

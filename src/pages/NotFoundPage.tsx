@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import notFoundImage from "../assets/404 Not Found.png"; // <-- Local image imported here!
+import notFoundImage from "../assets/404 Not Found.png";
 
 export const NotFoundPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header (Navbar) - Retained */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -81,11 +80,9 @@ export const NotFoundPage = () => {
           )}
         </div>
       </header>
-      {/* End Header */}
-      {/* Main Content - Not Found Message with Image */}
+
       <main className="flex-grow flex items-center justify-center text-center bg-gray-50">
         <div>
-          {/* Local imported image displayed here */}
           <img
             src={notFoundImage} // Now using the imported variable
             alt="Page Not Found"
@@ -106,9 +103,7 @@ export const NotFoundPage = () => {
           </Link>
         </div>
       </main>
-      {/* End Main Content */}
-      ---
-      {/* Footer - Retained */}
+
       <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-8">
         <aside>
           <svg
@@ -149,7 +144,6 @@ export const NotFoundPage = () => {
           <a className="link link-hover">Cookie policy</a>
         </nav>
       </footer>
-      {/* End Footer */}
     </div>
   );
 };

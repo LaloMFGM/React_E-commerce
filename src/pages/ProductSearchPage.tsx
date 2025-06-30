@@ -19,6 +19,9 @@ export const ProductSearchPage = () => {
       setLoading(true);
       setError(null);
       axios
+        // .post(
+        //   `${import.meta.env.VITE_API_URL}/products/search?query=${encodeURIComponent(searchQuery)}`
+        // )
         .post(
           `http://localhost:4000/api/products/search?query=${encodeURIComponent(searchQuery)}`
         )
