@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import type { Product, ProductResponse } from "../interfaces/Product";
-import { HotSaleHero } from "../components/HotSaleHero"; // Asegúrate de que la ruta sea correcta
-
+import { HotSaleHero } from "../components/HotSaleHero";
 
 import shoppingImage from '../assets/shopping.png';
 
@@ -102,97 +102,99 @@ export const HomePage = () => {
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Left: Toggle + Logo */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1">
-                <span className="text-purple-600 text-2xl">🛍️</span>
-                <div className="text-xl font-bold text-gray-800">ShopZone</div>
-              </div>
+            {/* Logo a la izquierda */}
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <span className="text-purple-600 text-2xl">🛍️</span>
+              <div className="text-xl font-bold text-gray-800">ShopZone</div>
             </div>
 
-            {/* Hamburger menu button for small screens */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900"
-              >
-                <svg
-                  className="h-6 w-6 fill-current"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {isMenuOpen ? (
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M18.278 16.864a1 1 0 01-1.414 1.414L12 13.414l-4.864 4.864a1 1 0 01-1.414-1.414L10.586 12 5.722 7.136a1 1 0 011.414-1.414L12 10.586l4.864-4.864a1 1 0 011.414 1.414L13.414 12l4.864 4.864z"
-                    />
-                  ) : (
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M4 5h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"
-                    />
-                  )}
-                </svg>
-              </button>
-            </div>
-
-            {/* Navigation and Search for medium and larger screens */}
-            <div className="hidden md:flex items-center gap-6 flex-wrap md:flex-nowrap">
-              <nav className="flex items-center gap-6 text-gray-900 font-medium">
-                <a href="/home" className="hover:text-blue-600">
-                  Home
-                </a>
-                <a
-                  href="/suggestproduct"
-                  className="hover:text-blue-600 whitespace-nowrap"
-                >
-                  Suggest Product
-                </a>
-              </nav>
-
-              <div className="max-w-md w-full">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu - Conditionally rendered based on isMenuOpen state */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-4">
-            <nav className="flex flex-col gap-3 mb-4 text-gray-900 font-medium">
-              <a href="/home" className="hover:text-blue-600 block">
-                Home
-              </a>
-              <a
-                href="/suggestproduct"
-                className="hover:text-blue-600 block whitespace-nowrap"
-              >
-                Suggest Product
-              </a>
-            </nav>
-            <div className="w-full">
+            {/* Barra de búsqueda centrada para pantallas medianas/grandes */}
+            <div className="hidden md:flex flex-grow justify-center mx-4">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
+                className="w-full max-w-lg pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
               />
             </div>
+
+            {/* Navegación y botón de menú (hamburger) a la derecha */}
+            <div className="flex items-center gap-6 flex-shrink-0">
+              {/* Navegación para pantallas medianas/grandes */}
+              <nav className="hidden md:flex items-center gap-6 text-gray-900 font-medium">
+                <Link to="/home" className="hover:text-blue-600">
+                  Home
+                </Link>
+                <Link
+                  to="/suggestproduct"
+                  className="hover:text-blue-600 whitespace-nowrap"
+                >
+                  Suggest Product
+                </Link>
+              </nav>
+
+              {/* Botón de menú para pantallas pequeñas */}
+              <div className="md:hidden">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900"
+                >
+                  <svg
+                    className="h-6 w-6 fill-current"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    {isMenuOpen ? (
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M18.278 16.864a1 1 0 01-1.414 1.414L12 13.414l-4.864 4.864a1 1 0 01-1.414-1.414L10.586 12 5.722 7.136a1 1 0 011.414-1.414L12 10.586l4.864-4.864a1 1 0 011.414 1.414L13.414 12l4.864 4.864z"
+                      />
+                    ) : (
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M4 5h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"
+                      />
+                    )}
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Menú móvil - Se muestra condicionalmente */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200 py-4 px-4">
+            {/* Barra de búsqueda móvil (centrada) */}
+            <div className="w-full mb-4 flex justify-center">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full max-w-sm pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900"
+              />
+            </div>
+            {/* Enlaces de navegación móvil (alineados a la derecha) */}
+            <nav className="flex flex-col items-end gap-3 text-gray-900 font-medium">
+              <Link to="/home" className="hover:text-blue-600 block">
+                Home
+              </Link>
+              <Link
+                to="/suggestproduct"
+                className="hover:text-blue-600 block whitespace-nowrap"
+              >
+                Suggest Product
+              </Link>
+            </nav>
           </div>
         )}
       </header>
 
-      {/* Hero Section: Hero with figure (reverse order) de DaisyUI con fondo gris turquesa */}
+      {/* Hero Section: Hero con figura (reverse order) de DaisyUI con fondo gris turquesa */}
       <div className="hero min-h-[70vh] bg-gray-300 py-10">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <img
@@ -262,10 +264,12 @@ export const HomePage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <div
+              <Link
                 key={product.id}
-                className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative"
+                to={`/product/${product.id}`}
+                className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative group"
               >
+                {/* The heart button should remain clickable independently, so it's not part of the Link */}
                 <button className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer z-10 p-1">
                   <svg
                     className="h-6 w-6"
@@ -303,16 +307,24 @@ export const HomePage = () => {
                     <div className="badge badge-outline badge-primary">
                       {product.category}
                     </div>
+                    {/* Add price display here, formatted for clarity */}
+                    <span className="text-xl font-bold text-gray-900">
+                      {new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                      }).format(product.price)}
+                    </span>
                   </div>
                   <h2 className="card-title text-lg font-semibold text-gray-900 line-clamp-2">
                     {product.name}
                   </h2>
                   <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                    A concise product description or key selling points go here.
-                    Keep it short and sweet for card views!
+                    {/* Use actual product description if available */}
+                    {product.description || "A concise product description or key selling points go here. Keep it short and sweet for card views!"}
                   </p>
 
                   <div className="flex items-center gap-1.5 mb-4">
+                    {/* These would ideally come from product.colors */}
                     <div
                       className="w-5 h-5 rounded-full bg-red-500 border border-gray-200 cursor-pointer"
                       title="Red"
@@ -328,12 +340,15 @@ export const HomePage = () => {
                   </div>
 
                   <div className="card-actions justify-end">
-                    <button className="btn btn-primary btn-block">
+                    <button
+                      className="btn btn-primary btn-block"
+                      onClick={(e) => { e.preventDefault(); /* Add to cart logic here */ }}
+                    >
                       Add to Cart
                     </button>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
