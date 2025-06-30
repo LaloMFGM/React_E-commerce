@@ -74,8 +74,8 @@ export const SuggestProductPage = () => {
     try {
       // Send to the backend
       const response = await fetch(
-        // `${import.meta.env.VITE_API_URL}/api/products`,
-        `http://localhost:4000/api/products`,
+        `${import.meta.env.VITE_API_URL}/api/products`,
+        // `http://localhost:4000/api/products`,
         {
           method: "POST",
           headers: {

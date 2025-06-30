@@ -31,8 +31,8 @@ export const ProductDetailPage = () => {
         setError(null);
 
         const response = await axios.get<{ product: Product }>(
-          // `${import.meta.env.VITE_API_URL}/api/products/${id}`
-          `http://localhost:4000/api/products/${id}` // Uncomment for local testing
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`
+          // `http://localhost:4000/api/products/${id}` // Uncomment for local testing
         );
 
         if (!response.data.product) {

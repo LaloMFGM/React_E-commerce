@@ -18,8 +18,8 @@ export const HomePage = () => {
 
   useEffect(() => {
     axios
-      // .get(`${import.meta.env.VITE_API_URL}/api/products`)
-      .get("http://localhost:4000/api/products")
+      .get(`${import.meta.env.VITE_API_URL}/api/products`)
+      // .get("http://localhost:4000/api/products")
       .then((res) => {
         const data = res.data.products.map((p: ProductResponse) => ({
           ...p,
