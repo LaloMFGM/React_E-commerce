@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import notFoundImage from '../assets/404 Not Found.png'; // <-- ¡Importamos la imagen local aquí!
+import notFoundImage from "../assets/404 Not Found.png"; // <-- ¡Importamos la imagen local aquí!
 
 export const NotFoundPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,8 +13,12 @@ export const NotFoundPage = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
-                <span className="text-purple-600 text-2xl">🛍️</span>
-                <div className="text-xl font-bold text-gray-800">ShopZone</div>
+                <Link to="/home" className="flex items-center gap-1">
+                  <span className="text-purple-600 text-2xl">🛍️</span>
+                  <div className="text-xl font-bold text-gray-800">
+                    ShopZone
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -78,7 +82,6 @@ export const NotFoundPage = () => {
         </div>
       </header>
       {/* End Header */}
-
       {/* Main Content - Not Found Message with Image */}
       <main className="flex-grow flex items-center justify-center text-center bg-gray-50">
         <div>
@@ -87,10 +90,14 @@ export const NotFoundPage = () => {
             src={notFoundImage} // Ahora usamos la variable importada
             alt="Page Not Found"
             className="mx-auto w-[70%] h-auto"
-            style={{ maxWidth: '400px' }}
+            style={{ maxWidth: "400px" }}
           />
-          <h2 className="text-3xl font-bold text-gray-700 mb-2">¡Ups! Página no encontrada</h2>
-          <p className="text-lg text-gray-600 mb-6">Lo sentimos, la página que estás buscando no existe.</p>
+          <h2 className="text-3xl font-bold text-gray-700 mb-2">
+            ¡Ups! Página no encontrada
+          </h2>
+          <p className="text-lg text-gray-600 mb-6">
+            Lo sentimos, la página que estás buscando no existe.
+          </p>
           <Link
             to="/home"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -100,9 +107,7 @@ export const NotFoundPage = () => {
         </div>
       </main>
       {/* End Main Content */}
-
       ---
-
       {/* Footer - Retained */}
       <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-8">
         <aside>

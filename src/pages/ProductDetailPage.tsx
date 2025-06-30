@@ -4,7 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Product } from "../interfaces/Product";
 
 // Definimos el placeholder para imágenes que no carguen
-const PLACEHOLDER_IMAGE = "https://via.placeholder.com/600x400?text=Image+Not+Available";
+const PLACEHOLDER_IMAGE =
+  "https://via.placeholder.com/600x400?text=Image+Not+Available";
 
 export const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,7 +33,9 @@ export const ProductDetailPage = () => {
         setError(null);
 
         // Ajusta la URL según tu API real
-        const response = await axios.get<{ product: Product }>(`http://localhost:4000/api/products/${id}`);
+        const response = await axios.get<{ product: Product }>(
+          `http://localhost:4000/api/products/${id}`
+        );
 
         if (!response.data.product) {
           setError("Product not found.");
@@ -42,9 +45,17 @@ export const ProductDetailPage = () => {
         }
       } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
-          setError(`Error: ${err.response.status} - ${err.response.data.message || 'Product not found.'}`);
+          setError(
+            `Error: ${err.response.status} - ${
+              err.response.data.message || "Product not found."
+            }`
+          );
         } else {
-          setError(`Failed to fetch product data: ${err instanceof Error ? err.message : String(err)}`);
+          setError(
+            `Failed to fetch product data: ${
+              err instanceof Error ? err.message : String(err)
+            }`
+          );
         }
         setProduct(null);
       } finally {
@@ -63,7 +74,9 @@ export const ProductDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600 text-lg">Cargando detalles del producto...</p>
+        <p className="text-gray-600 text-lg">
+          Cargando detalles del producto...
+        </p>
       </div>
     );
   }
@@ -88,7 +101,9 @@ export const ProductDetailPage = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
-        <p className="text-gray-700 text-lg mb-4">No se pudo cargar la información del producto.</p>
+        <p className="text-gray-700 text-lg mb-4">
+          No se pudo cargar la información del producto.
+        </p>
         <button
           onClick={() => navigate(-1)}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4"
@@ -110,8 +125,12 @@ export const ProductDetailPage = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
-                <span className="text-purple-600 text-2xl">🛍️</span>
-                <div className="text-xl font-bold text-gray-800">ShopZone</div>
+                <Link to="/home" className="flex items-center gap-1">
+                  <span className="text-purple-600 text-2xl">🛍️</span>
+                  <div className="text-xl font-bold text-gray-800">
+                    ShopZone
+                  </div>
+                </Link>
               </div>
             </div>
 
@@ -229,8 +248,12 @@ export const ProductDetailPage = () => {
 
         {/* Hot Sale Section */}
         <section className="bg-red-600 text-white py-16 px-8 rounded-lg text-center shadow-lg mb-12">
-          <h2 className="text-5xl font-extrabold mb-4 animate-pulse">¡HOT SALE! 🔥</h2>
-          <p className="text-2xl mb-6">Grandes descuentos en miles de productos.</p>
+          <h2 className="text-5xl font-extrabold mb-4 animate-pulse">
+            ¡HOT SALE! 🔥
+          </h2>
+          <p className="text-2xl mb-6">
+            Grandes descuentos en miles de productos.
+          </p>
           <button className="bg-white text-red-600 font-bold py-3 px-8 rounded-full text-xl hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 shadow-md">
             Ver Ofertas
           </button>
@@ -251,8 +274,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Laptop Ultrabook</h3>
-                  <p className="text-gray-600 text-sm mb-2">Potencia y portabilidad</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    Laptop Ultrabook
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    Potencia y portabilidad
+                  </p>
                   <p className="text-purple-600 font-bold text-xl">$1200.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                     Añadir al Carrito
@@ -267,8 +294,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Smart TV 4K 55"</h3>
-                  <p className="text-gray-600 text-sm mb-2">Entretenimiento en alta definición</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    Smart TV 4K 55"
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    Entretenimiento en alta definición
+                  </p>
                   <p className="text-purple-600 font-bold text-xl">$750.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                     Añadir al Carrito
@@ -283,8 +314,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Mouse Gamer RGB</h3>
-                  <p className="text-gray-600 text-sm mb-2">Precisión para tus juegos</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    Mouse Gamer RGB
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    Precisión para tus juegos
+                  </p>
                   <p className="text-purple-600 font-bold text-xl">$55.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                     Añadir al Carrito
@@ -299,8 +334,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Audífonos Bluetooth</h3>
-                  <p className="text-gray-600 text-sm mb-2">Sonido inmersivo sin cables</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                    Audífonos Bluetooth
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    Sonido inmersivo sin cables
+                  </p>
                   <p className="text-purple-600 font-bold text-xl">$99.00</p>
                   <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                     Añadir al Carrito
@@ -326,8 +365,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4 text-center">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Electrónica</h3>
-                  <p className="text-gray-600">Smartphones, laptops, gadgets y más.</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Electrónica
+                  </h3>
+                  <p className="text-gray-600">
+                    Smartphones, laptops, gadgets y más.
+                  </p>
                 </div>
               </div>
               {/* Category Card 2 */}
@@ -338,8 +381,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4 text-center">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Hogar y Cocina</h3>
-                  <p className="text-gray-600">Electrodomésticos, utensilios y decoración.</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Hogar y Cocina
+                  </h3>
+                  <p className="text-gray-600">
+                    Electrodomésticos, utensilios y decoración.
+                  </p>
                 </div>
               </div>
               {/* Category Card 3 */}
@@ -350,8 +397,12 @@ export const ProductDetailPage = () => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4 text-center">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Deportes y Aire Libre</h3>
-                  <p className="text-gray-600">Equipo, ropa y accesorios para tus aventuras.</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Deportes y Aire Libre
+                  </h3>
+                  <p className="text-gray-600">
+                    Equipo, ropa y accesorios para tus aventuras.
+                  </p>
                 </div>
               </div>
             </div>
@@ -361,8 +412,12 @@ export const ProductDetailPage = () => {
         {/* Call to Action Section */}
         <section className="py-16 bg-purple-700 text-white text-center rounded-lg shadow-xl mt-12">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-extrabold mb-4">¿No encuentras lo que buscas?</h2>
-            <p className="text-xl mb-8">Sugiere un producto y lo buscaremos para ti.</p>
+            <h2 className="text-4xl font-extrabold mb-4">
+              ¿No encuentras lo que buscas?
+            </h2>
+            <p className="text-xl mb-8">
+              Sugiere un producto y lo buscaremos para ti.
+            </p>
             <Link
               to="/suggestproduct"
               className="inline-block bg-white text-purple-700 font-bold py-3 px-8 rounded-full text-xl hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 shadow-md"

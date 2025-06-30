@@ -1,54 +1,49 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom"; // Import Link and useNavigate
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import type { Product, ProductResponse } from "../interfaces/Product";
-import { HotSaleHero } from "../components/HotSaleHero";
 
-import shoppingImage from "../assets/shopping.png";
-
-export const HomePage = () => {
+export const ProductSearchPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("name"); // This will now only apply to the initial product list display if needed
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("query") || "";
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchQuery);
+  const navigate = useNavigate();
 
-  
-
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  // Initial product load for the homepage display
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/products")
-      .then((res) => {
-        const data = res.data.products.map((p: ProductResponse) => ({
-          ...p,
-          id: p._id,
-        }));
-        setProducts(data); // Set initial products
-      })
-      .catch(() => {
-        setError("Error loading products");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    setLocalSearchTerm(searchQuery);
+    if (searchQuery) {
+      setLoading(true);
+      setError(null);
+      axios
+        .post(
+          `http://localhost:4000/api/products/search?query=${encodeURIComponent(
+            searchQuery
+          )}`
+        )
+        .then((res) => {
+          const data = res.data.products.map((p: ProductResponse) => ({
+            ...p,
+            id: p._id,
+          }));
+          setProducts(data);
+        })
+        .catch(() => {
+          setError("Error loading search results. Please try again.");
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setProducts([]);
+      setLoading(false);
+    }
+  }, [searchQuery]);
 
-  // Removed the filtering useEffect as search will now be handled via navigation to a new page.
-  // If you still want sorting on the homepage's initial product display, you would apply it directly
-  // to 'products' when rendering, or re-introduce a 'filteredProducts' state for the homepage.
-  // For now, the products displayed on the home page will not be filtered by 'searchTerm' or 'sortBy'
-  // until a search is explicitly performed.
-
-  // New function to handle search submission
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    if (searchTerm.trim()) {
-      // Navigate to the /search page with the query parameter
-      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`);
-      // Optionally, clear the search term after navigation
-      setSearchTerm("");
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (localSearchTerm.trim()) {
+      navigate(`/search?query=${encodeURIComponent(localSearchTerm.trim())}`);
     }
   };
 
@@ -95,7 +90,6 @@ export const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -106,14 +100,14 @@ export const HomePage = () => {
               </Link>
             </div>
             {/* Search Bar in the middle of the navbar */}
-            <form onSubmit={handleSearch} className="flex-grow max-w-md mx-4">
+            <form onSubmit={handleSearchSubmit} className="flex-grow max-w-md mx-4">
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search for products..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900" // Added text-gray-900 here
+                  value={localSearchTerm}
+                  onChange={(e) => setLocalSearchTerm(e.target.value)}
                 />
                 <button
                   type="submit"
@@ -149,74 +143,37 @@ export const HomePage = () => {
           </div>
         </div>
       </header>
-      {/* Hero Section: Hero con figura (reverse order) de DaisyUI con fondo gris turquesa */}
-      <div className="hero min-h-[75vh] bg-gray-100 py-10">
-        <div className="hero-content flex-col lg:flex-row-reverse">
-          <img
-            src={shoppingImage}
-            className="max-w-sm rounded-lg "
-            alt="Mujer con bolsas de compra"
-          />
-          <div>
-            <h1 className="text-5xl font-bold text-gray-900">
-              Tu Estilo, <br /> Nuestra Colección
-            </h1>
-            <p className="py-6 text-lg text-gray-700">
-              Descubre lo último en moda y tecnología. Calidad que te define,
-              precios que te sorprenden.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="btn btn-primary btn-lg shadow-md hover:bg-blue-700 transition-colors duration-300">
-                Comprar Ahora
-              </button>
-              <button className="btn btn-outline btn-primary btn-lg shadow-md hover:bg-blue-600 hover:text-white transition-colors duration-300">
-                Ver Colecciones
-              </button>
-            </div>
-          </div>
+
+      <div className="bg-gray-100 py-6 mb-6 shadow-sm">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl font-extrabold text-gray-900">
+            Search Results for "<span className="text-blue-600">{searchQuery}</span>"
+          </h1>
         </div>
       </div>
-      ---
-      {/* Nuevo Hero de Hot Sale, ubicado justo debajo del primer Hero */}
-      <HotSaleHero />
-      ---
-      {/* Contenido Principal (Sección de Productos) */}
+
       <main className="container mx-auto px-4 py-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-bold text-gray-900">Products</h2>
-            {/* The count will now reflect the initially loaded products, not filtered */}
-            <span className="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded">
-              {products.length} items
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            {/* The sort functionality on the homepage is currently applied to 'filteredProducts' which is no longer used for filtering.
-                If you want sorting on the *initial* product display, you'll need to apply it directly to `products` or reintroduce a state for sorted products.
-                For now, it will not affect the displayed products until a search is explicitly performed on the /search page.
-            */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white text-gray-900"
-            >
-              <option value="name">Sort by Name A-Z</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="category">Category</option>
-            </select>
-          </div>
+        <div className="flex items-center gap-2 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Products Found</h2>
+          <span className="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded">
+            {products.length} items
+          </span>
         </div>
-
-        {/* Tarjetas de Productos */}
-        {products.length === 0 ? (
+        {products.length === 0 && searchQuery ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No products found
+              No products found for "{searchQuery}"
             </h3>
-            <p className="text-gray-600">Try adjusting your search terms</p>
+            <p className="text-gray-600">Please try a different search term.</p>
+          </div>
+        ) : products.length === 0 && !searchQuery ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">👋</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Start searching for products!
+            </h3>
+            <p className="text-gray-600">Enter a term in the search bar above.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -226,7 +183,6 @@ export const HomePage = () => {
                 to={`/product/${product.id}`}
                 className="card card-compact bg-white shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300 relative group"
               >
-                {/* The heart button should remain clickable independently, so it's not part of the Link */}
                 <button className="absolute top-4 right-4 text-gray-400 hover:text-red-500 cursor-pointer z-10 p-1">
                   <svg
                     className="h-6 w-6"
@@ -259,12 +215,12 @@ export const HomePage = () => {
                     className="object-contain w-full h-full p-4"
                   />
                 </figure>
+
                 <div className="card-body">
                   <div className="flex justify-between items-center mb-1">
                     <div className="badge badge-outline badge-primary">
                       {product.category}
                     </div>
-                    {/* Add price display here, formatted for clarity */}
                     <span className="text-xl font-bold text-gray-900">
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
@@ -272,17 +228,17 @@ export const HomePage = () => {
                       }).format(product.price)}
                     </span>
                   </div>
+
                   <h2 className="card-title text-lg font-semibold text-gray-900 line-clamp-2">
                     {product.name}
                   </h2>
+
                   <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-                    {/* Use actual product description if available */}
                     {product.description ||
                       "A concise product description or key selling points go here. Keep it short and sweet for card views!"}
                   </p>
 
                   <div className="flex items-center gap-1.5 mb-4">
-                    {/* These would ideally come from product.colors */}
                     <div
                       className="w-5 h-5 rounded-full bg-red-500 border border-gray-200 cursor-pointer"
                       title="Red"
@@ -313,67 +269,6 @@ export const HomePage = () => {
           </div>
         )}
       </main>
-      ---
-      {/* Sección "Ofertas Especiales y Beneficios" */}
-      <div className="hero bg-white min-h-[50vh] py-10 px-4">
-        <div className="hero-content text-center w-full max-w-7xl mx-auto flex flex-col items-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-black">
-            Ofertas Especiales y Beneficios
-          </h2>
-
-          <div className="flex flex-col md:flex-row justify-center gap-6 overflow-x-auto pb-4 px-2 w-full">
-            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
-              <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  🎉 Descuentos Imperdibles 🎉
-                </h2>
-                <p className="mb-6 text-black">
-                  Aprovecha nuestras ofertas exclusivas en una amplia selección
-                  de productos. ¡No te los puedes perder!
-                </p>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-primary w-full">
-                    Ver Ofertas
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
-              <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  🔥 Hot Sale ShopZone 🔥
-                </h2>
-                <p className="mb-6 text-black">
-                  Prepárate para el Hot Sale con los mejores precios del año.
-                  ¡Regístrate para notificaciones!
-                </p>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-secondary w-full">
-                    Más Información
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="card w-full sm:w-80 bg-white shadow-xl flex-shrink-0 border border-black transition-transform duration-300 hover:scale-105">
-              <div className="card-body items-center text-center">
-                <h2 className="card-title text-2xl font-bold mb-4 text-black">
-                  💳 Meses Sin Intereses 💳
-                </h2>
-                <p className="mb-6 text-black">
-                  Compra ahora y paga después con nuestras opciones de meses sin
-                  intereses en tus bancos favoritos.
-                </p>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-accent w-full">Ver Bancos</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Footer */}
       <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-8">
         <aside>
           <svg
